@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const TodoSchema = require("../../schema/todoList.schema");
+const findUser = require("../../utils/findUser");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,9 +16,7 @@ module.exports = {
 		const todoName = interaction.options.getString("task");
 
 		try {
-			let userCollection = await TodoSchema.findOne({
-				user_id: interaction.user.id,
-			});
+			let userCollection = await findUser(TodoSchema, interaction.user.id);
 
 			if (userCollection) {
 				userCollection.task.push({
