@@ -20,7 +20,6 @@ module.exports = {
 			}
 
 			const embed = buildTodoEmbed(userCollection.task);
-			console.log(embed);
 			await interaction.reply({ embeds: [embed], ephemeral: true });
 		} catch (err) {
 			console.log(`Error fetching list of task: ${err}`);

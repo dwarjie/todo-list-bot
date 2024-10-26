@@ -1,6 +1,5 @@
 exports.buildTodoEmbed = (taskList) => {
 	const embedFields = prepareFields(taskList);
-	console.log(embedFields);
 	const todoListEmbed = {
 		color: 0xff4655,
 		title: "Todo List",
@@ -12,7 +11,6 @@ exports.buildTodoEmbed = (taskList) => {
 };
 
 const prepareFields = (taskList) => {
-	console.log(taskList);
 	let fieldList = [];
 	taskList.map((task) => {
 		const titleField = {
