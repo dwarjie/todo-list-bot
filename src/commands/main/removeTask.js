@@ -16,23 +16,40 @@ module.exports = {
 		),
 	async autocomplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
-		const choices = await taskChoices(TodoSchema, interaction.user.id);
-		const filteredChoices = choices.filter((task) =>
-			task.title.toLowerCase().startsWith(focusedValue.toLowerCase())
-		);
+		try {
+			const choices = await taskChoices(TodoSchema, interaction.user.id);
+			const filteredChoices = choices.filter((task) =>
+				task.title.toLowerCase().startsWith(focusedValue.toLowerCase())
+			);
 
-		const result = filteredChoices.map((choice) => ({
-			name: choice.title,
-			value: choice._id,
-		}));
+			const result = filteredChoices.map((choice) => ({
+				name: choice.title,
+				value: choice._id,
+			}));
 
-		await interaction.respond(result.slice(0, 25)).catch(() => {});
+			await interaction.respond(result.slice(0, 25)).catch(() => {});
+		} catch (err) {
+			console.log(`Error responding to autocomplete: ${err}`);
+			await interaction.reply({
+				content: `There seems to be a problem. Please try again later.`,
+				ephemeral: true,
+			});
+		}
 	},
 	async execute(interaction) {
 		const taskId = interaction.options.getString("removetask");
 		try {
 			const userCollection = await findUser(TodoSchema, interaction.user.id);
 			const taskSelected = await userCollection.task.id(taskId);
+
+			if (!userCollection || taskSelected === null) {
+				await interaction.reply({
+					content: `Task does not exist.`,
+					ephemeral: true,
+				});
+				return;
+			}
+
 			await userCollection.task.pull(taskId);
 			await userCollection.save();
 
