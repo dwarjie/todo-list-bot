@@ -1,4 +1,5 @@
 const fs = require("node:fs");
+const http = require("http");
 const path = require("node:path");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 require("dotenv").config();
@@ -44,5 +45,16 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
+// THIS IS ONLY FOR THE TCP HEALTH CHECK OF THE DEPLOYMENT
+const server = http.createServer((req, res) => {
+	res.writeHead(200, { "Content-Type": "text/plain" });
+	res.end("OK");
+});
+
+const DUMMYPORT = 8000;
+server.listen(DUMMYPORT, () => {
+	console.log(`Health check server listening on port ${DUMMYPORT}`);
+});
 
 client.login(process.env.TOKEN);
