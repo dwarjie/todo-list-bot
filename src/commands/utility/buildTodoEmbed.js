@@ -19,25 +19,13 @@ const prepareFields = (taskList) => {
 			inline: true,
 		};
 
-		const dueField = {
-			name: "Due",
-			value: task.dueDate ? task.dueDate : "\u200b",
-			inline: true,
-		};
-
-		const completedField = {
-			name: "Completed",
-			value: task.isCompleted ? "✅" : "❌",
-			inline: true,
-		};
-
 		const breakField = {
 			name: "\u200b",
 			value: "\u200b",
 			inline: false,
 		};
 
-		fieldList.push(titleField, dueField, completedField, breakField);
+		fieldList.push(titleField, breakField);
 	});
 
 	return fieldList;
